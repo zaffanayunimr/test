@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Flash Game</title>
+
+    <!-- 1. Load Ruffle Flash Emulator -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        #flash-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ruffle-player {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flash-container"></div>
+
+    <script>
+        // Force Landscape mode on phones/tablets
+        async function lockLandscape() {
+            if (screen.orientation && screen.orientation.lock) {
+                try {
+                    await screen.orientation.lock("landscape");
+                } catch (err) {
+                    // Orientation locking requires user interaction or fullscreen mode in browsers
+                }
+            }
+        }
+
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.addEventListener("DOMContentLoaded", () => {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById("flash-container");
+
+            container.appendChild(player);
+
+            player.config = {
+                autoplay: "on",
+                unmuteOverlay: "hidden",
+                letterbox: "on"
+            };
+
+            // ⚠️ REPLACE 'your-file.swf' WITH THE ACTUAL NAME OF YOUR SWF FILE
+            player.load("flow with confidence.swf");
+
+            lockLandscape();
+            window.addEventListener("click", lockLandscape, { once: true });
+            window.addEventListener("touchstart", lockLandscape, { once: true });
+        });
+    </script>
+
+</body>
+</html>
